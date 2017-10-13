@@ -1,10 +1,7 @@
-//#include <glad/glad.h>
+
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
-
-//#include "linmath.h"
 #include <iostream>
-
 #include <stdlib.h>
 #include <stdio.h>
 

@@ -133,7 +133,19 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\common\Mesh.cpp" />
+    <ClCompile Include="src\common\ResourceManager.cpp" />
+    <ClCompile Include="src\common\ShaderProgram.cpp" />
+    <ClCompile Include="src\common\Texture.cpp" />
     <ClCompile Include="src\main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\common\Common.h" />
+    <ClInclude Include="src\common\Logger.h" />
+    <ClInclude Include="src\common\Mesh.h" />
+    <ClInclude Include="src\common\ResourceManager.h" />
+    <ClInclude Include="src\common\ShaderProgram.h" />
+    <ClInclude Include="src\common\Texture.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
