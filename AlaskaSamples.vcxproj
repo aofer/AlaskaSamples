@@ -139,19 +139,28 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\common\Camera.cpp" />
     <ClCompile Include="src\common\Mesh.cpp" />
     <ClCompile Include="src\common\ResourceManager.cpp" />
     <ClCompile Include="src\common\ShaderProgram.cpp" />
     <ClCompile Include="src\common\Texture.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\SimpleMeshDemo.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\common\Camera.h" />
     <ClInclude Include="src\common\Common.h" />
     <ClInclude Include="src\common\Logger.h" />
     <ClInclude Include="src\common\Mesh.h" />
     <ClInclude Include="src\common\ResourceManager.h" />
     <ClInclude Include="src\common\ShaderProgram.h" />
     <ClInclude Include="src\common\Texture.h" />
+    <ClInclude Include="src\IDemo.h" />
+    <ClInclude Include="src\SimpleMeshDemo.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Assets\Shaders\SimpleMesh_fs.glsl" />
+    <None Include="Assets\Shaders\SimpleMesh_vs.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

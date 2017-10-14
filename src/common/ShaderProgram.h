@@ -15,6 +15,7 @@ public:
 	ShaderProgram();
 	void Compile(const std::string& vertexSrc, const std::string& fragmentSrc, const std::string& geometrySrc = NULL);
 	void Bind();
+	GLuint GetProgram() const;
 
 
 

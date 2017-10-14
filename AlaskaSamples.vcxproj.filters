@@ -11,6 +11,9 @@
     <Filter Include="src\common">
       <UniqueIdentifier>{d7807af0-21b9-4bb1-8781-476fdccd9ea9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\Shaders">
+      <UniqueIdentifier>{40107d90-0766-405d-b9f2-a1dfc6a2c845}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -27,6 +30,12 @@
     </ClCompile>
     <ClCompile Include="src\common\Texture.cpp">
       <Filter>src\common</Filter>
+    </ClCompile>
+    <ClCompile Include="src\common\Camera.cpp">
+      <Filter>src\common</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SimpleMeshDemo.cpp">
+      <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -48,5 +57,22 @@
     <ClInclude Include="src\common\Texture.h">
       <Filter>src\common</Filter>
     </ClInclude>
+    <ClInclude Include="src\IDemo.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\common\Camera.h">
+      <Filter>src\common</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SimpleMeshDemo.h">
+      <Filter>src</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Assets\Shaders\SimpleMesh_vs.glsl">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="Assets\Shaders\SimpleMesh_fs.glsl">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

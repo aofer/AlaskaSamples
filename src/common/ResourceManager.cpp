@@ -31,12 +31,12 @@ void ResourceManager::LoadShader(const std::string& vShaderFile, const std::stri
 		return;
 	}
 	ShaderProgramPtr program = std::make_shared<ShaderProgram>();;
-	std::string vertexShaderStr = ReadFileIntoString(vShaderFile);
-	std::string fragmentShaderStr = ReadFileIntoString(fShaderFile);
-	std::string  geometryShaderStr = nullptr;
+	std::string vertexShaderStr = ReadFileIntoString(m_resourceFolderPath + vShaderFile);
+	std::string fragmentShaderStr = ReadFileIntoString(m_resourceFolderPath + fShaderFile);
+	std::string  geometryShaderStr = "";
 	if (!gShaderFile.empty())
 	{
-		geometryShaderStr = ReadFileIntoString(gShaderFile);
+		geometryShaderStr = ReadFileIntoString(m_resourceFolderPath + gShaderFile);
 	}
 	program->Compile(vertexShaderStr, fragmentShaderStr, geometryShaderStr);
 	m_shaders[name] = program;
@@ -50,7 +50,7 @@ ShaderProgramPtr ResourceManager::GetShader(const std::string& name)
 
 void ResourceManager::LoadModel(const std::string& path, const std::string& name)
 {
-	MeshPtr tMesh = CreateMesh(path);
+	MeshPtr tMesh = CreateMesh(m_resourceFolderPath + path);
 
 	m_meshes[name] = tMesh;
 }
@@ -74,7 +74,7 @@ TexturePtr ResourceManager::GetTexture(const std::string& name)
 
 ResourceManager::ResourceManager()
 {
-
+	m_resourceFolderPath = "Assets\\";
 }
 
 ResourceManager::~ResourceManager()
@@ -82,6 +82,11 @@ ResourceManager::~ResourceManager()
 
 }
 
+
+void ResourceManager::SetResourceFolderPath(const std::string& path)
+{
+	m_resourceFolderPath = path;
+}
 
 MeshPtr ResourceManager::CreateMesh(const std::string& path)
 {

@@ -36,7 +36,7 @@ void ShaderProgram::Compile(const std::string& vertexSrc, const std::string& Fra
 		std::cout << "Shader Loader : LINK ERROR" << std::endl << &program_log[0] << std::endl;
 		return;
 	}
-
+	m_program = program;
 }
 
 void ShaderProgram::Bind()
@@ -44,6 +44,11 @@ void ShaderProgram::Bind()
 	glUseProgram(m_program);
 }
 
+
+GLuint ShaderProgram::GetProgram() const
+{
+	return m_program;
+}
 
 GLuint ShaderProgram::CreateShader(GLenum shaderType, const std::string& source, const std::string& shaderName)
 {

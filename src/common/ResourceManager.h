@@ -30,12 +30,14 @@ public:
 
 	ResourceManager();
 	~ResourceManager();
+	void SetResourceFolderPath(const std::string& path);
 
 private:
 	// Resource Storage 
 	std::map<std::string, ShaderProgramPtr> m_shaders;
 	std::map<std::string, MeshPtr> m_meshes;
 	std::map<std::string, TexturePtr> m_textures;
+	std::string m_resourceFolderPath;
 
 	MeshPtr ResourceManager::CreateMesh(const std::string& path);
 	void ResourceManager::InitMesh(unsigned int Index, const aiMesh* paiMesh, MeshPtr mesh);
