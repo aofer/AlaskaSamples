@@ -23,12 +23,12 @@ static std::string ReadFileIntoString(const std::string& filename)
 }
 
 
-void ResourceManager::LoadShader(const std::string& vShaderFile, const std::string& fShaderFile, const std::string& gShaderFile, std::string name)
+ShaderProgramPtr ResourceManager::LoadShader(const std::string& vShaderFile, const std::string& fShaderFile, const std::string& gShaderFile, std::string name)
 {
 	if (vShaderFile.empty() || fShaderFile.empty())
 	{
 		LOG_ERROR("Missing vertex\fragment shader");
-		return;
+		return nullptr;
 	}
 	ShaderProgramPtr program = std::make_shared<ShaderProgram>();;
 	std::string vertexShaderStr = ReadFileIntoString(m_resourceFolderPath + vShaderFile);
@@ -40,6 +40,7 @@ void ResourceManager::LoadShader(const std::string& vShaderFile, const std::stri
 	}
 	program->Compile(vertexShaderStr, fragmentShaderStr, geometryShaderStr);
 	m_shaders[name] = program;
+	return program;
 }
 
 
@@ -48,11 +49,12 @@ ShaderProgramPtr ResourceManager::GetShader(const std::string& name)
 	return m_shaders[name];
 }
 
-void ResourceManager::LoadModel(const std::string& path, const std::string& name)
+MeshPtr ResourceManager::LoadMesh(const std::string& path, const std::string& name)
 {
 	MeshPtr tMesh = CreateMesh(m_resourceFolderPath + path);
 
 	m_meshes[name] = tMesh;
+	return tMesh;
 }
 
 MeshPtr ResourceManager::GetMesh(const std::string& name)
@@ -60,11 +62,12 @@ MeshPtr ResourceManager::GetMesh(const std::string& name)
 	return m_meshes[name];
 }
 
-void ResourceManager::LoadTexture(const std::string& path, const std::string& name)
+TexturePtr ResourceManager::LoadTexture(const std::string& path, const std::string& name)
 {
-	TexturePtr texture = std::make_shared<Texture>(path);
+	TexturePtr texture = std::make_shared<Texture>(m_resourceFolderPath + path);
 	texture->Load();
 	m_textures[name] = texture;
+	return texture;
 }
 
 TexturePtr ResourceManager::GetTexture(const std::string& name)

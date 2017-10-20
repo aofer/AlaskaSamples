@@ -21,11 +21,11 @@ class ResourceManager
 public:
 
 
-	void LoadShader(const std::string& vShaderFile, const std::string& fShaderFile, const std::string& gShaderFile, std::string name);
+	ShaderProgramPtr LoadShader(const std::string& vShaderFile, const std::string& fShaderFile, const std::string& gShaderFile, std::string name);
 	ShaderProgramPtr GetShader(const std::string& name);
-	void LoadModel(const std::string& path, const std::string& name);
+	MeshPtr LoadMesh(const std::string& path, const std::string& name);
 	MeshPtr GetMesh(const std::string& name);
-	void LoadTexture(const std::string& path, const std::string& name);
+	TexturePtr LoadTexture(const std::string& path, const std::string& name);
 	TexturePtr GetTexture(const std::string& name);
 
 	ResourceManager();
