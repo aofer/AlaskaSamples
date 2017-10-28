@@ -9,9 +9,17 @@
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_glfw_gl3.h"
 
-#include "common/Camera.h"
+#include "common/FPSCamera.h"
 #include "SimpleMeshDemo.h"
 #include "common/ResourceManager.h"
+
+bool activeCamera;
+FPSCamera camera;
+GLfloat deltaTime = 0.0f;
+GLfloat lastFrame = 0.0f;
+GLfloat lastX, lastY;
+GLfloat mouseSensitivity = 0.5;
+bool firstEntered = true;
 
 static void error_callback(int error, const char* description)
 {
@@ -22,13 +30,78 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 {
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, GLFW_TRUE);
+	if (key == GLFW_KEY_W && action == GLFW_PRESS)
+	{
+		camera.moveForward(0.3);
+	}
+	else if (key ==GLFW_KEY_S && action == GLFW_PRESS)
+	{
+		camera.moveForward(-0.3);
+	}
+	else if (key == GLFW_KEY_A && action == GLFW_PRESS)
+	{
+		camera.strafe(0.3);
+	}
+	else if (key == GLFW_KEY_D && action == GLFW_PRESS)
+	{
+		camera.strafe(-0.3);
+	}
+	else if (key == GLFW_KEY_Q && action == GLFW_PRESS)
+	{
+		camera.liftUp(0.3);
+	}
+	else if (key == GLFW_KEY_Z && action == GLFW_PRESS)
+	{
+		camera.liftUp(-0.3);
+	}
 }
+
+void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
+{
+	if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS)
+	{
+		activeCamera = true;
+	}
+	else
+	{
+		activeCamera = false;
+	}
+}
+
+void mouse_move_callback(GLFWwindow *window, double xPos, double yPos)
+{
+
+	if (firstEntered)
+	{
+		lastX = xPos;
+		lastY = yPos;
+		firstEntered = false;
+	}
+
+	GLfloat xOffset = xPos - lastX;
+	GLfloat yOffset = lastY - yPos;
+	lastX = xPos;
+	lastY = yPos;
+
+	if (activeCamera)
+	{
+		//camera.MouseMovement(xOffset, yOffset);
+		camera.pitch(mouseSensitivity * yOffset);
+		camera.yaw(mouseSensitivity * -xOffset);
+	}
+
+}
+
 
 
 void RenderImgui()
 {
 
 }
+
+
+
+
 
 int main(int argc, char *argv[])
 {
@@ -49,7 +122,7 @@ int main(int argc, char *argv[])
 	bool fullscreen = false;
 
 
-	window = glfwCreateWindow(640, 480, "Simple example", NULL, NULL);
+	window = glfwCreateWindow(1024, 768, "OpenGL Tech Demos", NULL, NULL);
 	if (!window)
 	{
 		glfwTerminate();
@@ -57,7 +130,8 @@ int main(int argc, char *argv[])
 	}
 
 	glfwSetKeyCallback(window, key_callback);
-
+	glfwSetCursorPosCallback(window, mouse_move_callback);
+	glfwSetMouseButtonCallback(window, mouse_button_callback);
 	glfwMakeContextCurrent(window);
 
 	//Init glew
@@ -84,9 +158,9 @@ int main(int argc, char *argv[])
 	bool ImGui_WindowOpened = true;
 
 
-	Camera* camera = new Camera();
-	camera->SetPosition(glm::vec3(-1.0, 2.0, -1.0));
-	camera->SetLookAt(glm::vec3(0.0, 1.0, 0.0));
+	//FPSCamera* camera = new FPSCamera();
+	camera.SetPosition(glm::vec3(-1.0, 2.0, -1.0));
+	camera.SetLookAt(glm::vec3(0.0, 1.0, 0.0));
 	ResourceManager* manager = new ResourceManager();
 	IDemo* demo = new SimpleMeshDemo();
 	demo->InitializeScene(manager);
@@ -98,6 +172,10 @@ int main(int argc, char *argv[])
 	{
 		float ratio;
 		int width, height;
+		// Set frame time
+		GLfloat currentFrame = glfwGetTime();
+		deltaTime = currentFrame - lastFrame;
+		lastFrame = currentFrame;
 
 
 		glfwGetFramebufferSize(window, &width, &height);
@@ -125,8 +203,9 @@ int main(int argc, char *argv[])
 		ImGui::End();
 
 #pragma endregion
-		demo->Update(0.0);
-		demo->Render(camera);
+
+		demo->Update(deltaTime);
+		demo->Render(&camera);
 
 
 		//render gui

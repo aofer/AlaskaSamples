@@ -61,6 +61,9 @@
     <ClCompile Include="src\common\CubeMapTexture.cpp">
       <Filter>src\common</Filter>
     </ClCompile>
+    <ClCompile Include="src\SphericalHarmonicsDemo.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\common\Common.h">
@@ -118,6 +121,12 @@
       <Filter>src\common</Filter>
     </ClInclude>
     <ClInclude Include="src\common\CubeMapCamera.h">
+      <Filter>src\common</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SphericalHarmonicsDemo.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\common\Lighting.h">
       <Filter>src\common</Filter>
     </ClInclude>
   </ItemGroup>

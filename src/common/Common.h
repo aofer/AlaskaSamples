@@ -12,3 +12,7 @@
 #define INVALID_UNIFORM_LOCATION 0xffffffff
 
 #define ARRAY_SIZE_IN_ELEMENTS(a) (sizeof(a)/sizeof(a[0]))
+
+typedef unsigned int uint;
+typedef unsigned short ushort;
+typedef unsigned char uchar;

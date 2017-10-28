@@ -153,6 +153,7 @@
     <ClCompile Include="src\imgui\imgui_impl_glfw_gl3.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\SimpleMeshDemo.cpp" />
+    <ClCompile Include="src\SphericalHarmonicsDemo.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\common\Camera.h" />
@@ -160,6 +161,7 @@
     <ClInclude Include="src\common\CubeMapCamera.h" />
     <ClInclude Include="src\common\CubeMapTexture.h" />
     <ClInclude Include="src\common\FPSCamera.h" />
+    <ClInclude Include="src\common\Lighting.h" />
     <ClInclude Include="src\common\Logger.h" />
     <ClInclude Include="src\common\Mesh.h" />
     <ClInclude Include="src\common\ResourceManager.h" />
@@ -174,6 +176,7 @@
     <ClInclude Include="src\imgui\stb_textedit.h" />
     <ClInclude Include="src\imgui\stb_truetype.h" />
     <ClInclude Include="src\SimpleMeshDemo.h" />
+    <ClInclude Include="src\SphericalHarmonicsDemo.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Shaders\SimpleMesh_fs.glsl" />
