@@ -34,6 +34,9 @@ void ShaderProgram::Compile(const std::string& vertexSrc, const std::string& Fra
 		std::vector<char> program_log(info_log_length);
 		glGetProgramInfoLog(program, info_log_length, NULL, &program_log[0]);
 		std::cout << "Shader Loader : LINK ERROR" << std::endl << &program_log[0] << std::endl;
+		std::ostringstream stream;
+		stream << "Shader Loader : LINK ERROR" << &program_log[0] << std::endl;
+		//LOG_ERROR(stream.str());
 		return;
 	}
 	m_program = program;
@@ -41,9 +44,18 @@ void ShaderProgram::Compile(const std::string& vertexSrc, const std::string& Fra
 
 void ShaderProgram::Bind()
 {
-	glUseProgram(m_program);
+	if (m_program != m_currentlyBinded)
+	{
+		glUseProgram(m_program);
+		m_currentlyBinded = m_program;
+	}
 }
 
+
+bool ShaderProgram::IsBinded()
+{
+	return m_program == m_currentlyBinded;
+}
 
 GLuint ShaderProgram::GetProgram() const
 {

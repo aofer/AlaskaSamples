@@ -11,6 +11,7 @@
 
 #include "common/FPSCamera.h"
 #include "SimpleMeshDemo.h"
+#include "SphericalHarmonicsDemo.h"
 #include "common/ResourceManager.h"
 
 bool activeCamera;
@@ -159,10 +160,12 @@ int main(int argc, char *argv[])
 
 
 	//FPSCamera* camera = new FPSCamera();
-	camera.SetPosition(glm::vec3(-1.0, 2.0, -1.0));
-	camera.SetLookAt(glm::vec3(0.0, 1.0, 0.0));
+	camera.SetPosition(glm::vec3(0.0, 5.0, -13.0));
+	camera.SetLookAt(glm::vec3(0.0, 5.0, 0.0));
 	ResourceManager* manager = new ResourceManager();
-	IDemo* demo = new SimpleMeshDemo();
+	SimpleMeshDemo* demo = new SimpleMeshDemo();
+	SphericalHarmonicsDemo* shDemo = new SphericalHarmonicsDemo();
+	shDemo->InitializeScene(manager);
 	demo->InitializeScene(manager);
 	glfwSwapInterval(1);
 
@@ -196,6 +199,16 @@ int main(int argc, char *argv[])
 		{
 			if (ImGui::TreeNode("Simple Mesh"))
 			{
+				float colorA[4];
+				ImGui::ColorPicker4("colorA", colorA, 0);
+				glm::vec4 colorVec(colorA[0],colorA[1], colorA[2], colorA[3] );
+				float colorB[4];
+				ImGui::ColorPicker4("colorB", colorB, 0);
+				glm::vec4 colorVecB(colorB[0], colorB[1], colorB[2], colorB[3]);
+				float colorC[4];
+				ImGui::ColorPicker4("colorC", colorC, 0);
+				glm::vec4 colorVecC(colorC[0], colorC[1], colorC[2], colorC[3]);
+				demo->SetColors(colorVec, colorVecB, colorVecC);
 				bool clicked = ImGui::Button("Cube Mapping Demo");
 				ImGui::TreePop();
 			}
@@ -204,8 +217,8 @@ int main(int argc, char *argv[])
 
 #pragma endregion
 
-		demo->Update(deltaTime);
-		demo->Render(&camera);
+		shDemo->Update(deltaTime);
+		shDemo->Render(&camera);
 
 
 		//render gui

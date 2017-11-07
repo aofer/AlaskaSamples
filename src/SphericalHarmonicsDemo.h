@@ -1,9 +1,31 @@
 #pragma once
 #include "IDemo.h"
 #include "Common/ResourceManager.h"
-#include "Common/Lighting.h"
 
 class CubeMapCamera;
+
+struct Material
+{
+	glm::vec4 diffuseColor;
+	glm::vec4 specColor;
+	glm::vec4 ambientColor;
+	float shininess;
+	float specularIntensity;
+};
+
+struct SpotLight
+{
+	glm::vec4 Color;
+	glm::vec4 Position;
+	glm::vec4 Direction;
+	float AmbientIntensity;
+	float DiffuseIntensity;
+	float ConstAtten;
+	float LinearAtten;
+	float ExpAtten;
+	float Cutoff;
+};
+
 
 class SphericalHarmonicsDemo : public IDemo
 {
@@ -12,26 +34,21 @@ private:
 	MeshPtr m_room;
 	ShaderProgramPtr m_shader;
 	SpotLight m_spotLight;
+	Material m_material;
 
 	GLuint m_spotUBO;
+	GLuint m_materialUBO;
 	GLuint m_envMapTexture;
 	GLuint m_fboId;
 	CubeMapCamera* m_cubeCam;
 	std::vector<glm::vec3> m_shCoeff[4];
-	GLuint m_viewMatrixULocation;
-	GLuint m_projMatrixULocation;
+	GLuint m_viewProjMatrixLocation;
+	GLuint m_camPositionLocation;
+	GLuint m_modelMatrixLocation;
+	GLuint m_coeffLocation;
 	unsigned int m_numOfBounces;
+	glm::mat4x4 m_worldMatrix;
 
-	//TODO remove this struct and replace with UBO
-	struct LightUniformLocations
-	{
-		GLuint color;
-		GLuint ambientIntensity;
-		GLuint diffuseIntensity;
-		GLuint direction;
-		GLuint position;
-
-	} m_lightLoc;
 
 	void SphericalHarmonicsFromTexture(GLuint cubeTexture,
 		std::vector<glm::vec3> & output, const unsigned int order);
@@ -50,6 +67,9 @@ private:
 	void InitEnvironmentRendering();
 
 	void RenderEnvironmentMap(unsigned int coeffIndex);
+
+	void RenderScene(const glm::vec3 &camPosition, const glm::mat4 &viewProjection, unsigned int coeffIndex);
+
 	void BakeSphericalHarmonics();
 
 public:

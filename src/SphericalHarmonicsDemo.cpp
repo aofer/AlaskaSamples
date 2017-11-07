@@ -5,8 +5,10 @@
 
 #define _USE_MATH_DEFINES
 #include <math.h>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/transform.hpp>
 
-const unsigned int CUBEMAP_SIZE = 1024;
+const unsigned int CUBEMAP_SIZE = 128;
 const unsigned int MAX_BOUNCES = 3;
 
 
@@ -15,23 +17,56 @@ void SphericalHarmonicsDemo::InitializeScene(ResourceManager* manager)
 	m_room = manager->LoadMesh("Models\\room.obj", "room");
 	m_shader = manager->LoadShader("Shaders\\SHLighting_vs.glsl", "Shaders\\SHLighting_fs.glsl", "", "SHLighting");
 
-	glGenBuffers(1, &m_spotUBO);
-	
 	m_shader->Bind();
-	m_viewMatrixULocation = glGetUniformLocation(m_shader->GetProgram(), "viewMatrix");
-	m_projMatrixULocation = glGetUniformLocation(m_shader->GetProgram(), "projectionMatrix");
+	m_viewProjMatrixLocation = glGetUniformLocation(m_shader->GetProgram(), "viewProjMatrix");
+	m_modelMatrixLocation = glGetUniformLocation(m_shader->GetProgram(), "worldMatrix");
+	m_camPositionLocation = glGetUniformLocation(m_shader->GetProgram(), "camPosition");
+	m_coeffLocation = glGetUniformLocation(m_shader->GetProgram(), "gCoef");
 
 	glm::vec3 cubeMapCenter = glm::vec3(0.0, 5.0, 0.0);
 	m_cubeCam = new CubeMapCamera(cubeMapCenter);
 	m_shCoeff[0].resize(9);
+	m_numOfBounces = 3;
 
-	m_spotLight.m_color = glm::vec3(1.0, 1.0, 1.0);
-	m_spotLight.m_diffuseIntensity = 0.3f;
-	m_spotLight.m_direction = glm::vec3(0.0, -1.0, 0.0);
-	m_spotLight.Attenuation.Linear = 0.1f;
-	m_spotLight.m_ambientIntensity = 0.0f;
-	m_spotLight.m_cutoff = 25.5f;
-	m_spotLight.m_position = glm::vec3(-2.0, 15.0, -2.0);
+	m_spotLight.Color = glm::vec4(1.0, 1.0, 1.0,1.0);
+	m_spotLight.DiffuseIntensity = 0.3f;
+	m_spotLight.Direction = glm::vec4(0.0, -1.0, 0.0,1.0f);
+	m_spotLight.LinearAtten = 0.1f;
+	m_spotLight.ConstAtten = 0.0f;
+	m_spotLight.ExpAtten = 0.0f;
+	m_spotLight.AmbientIntensity = 0.0f;
+	m_spotLight.Cutoff = cosf(glm::radians(25.5f));
+	m_spotLight.Position = glm::vec4(-2.0, 15.0, -2.0,1.0);
+
+	m_material.diffuseColor = glm::vec4(0.8, 0.8, 0.8,1.0);
+	m_material.specColor = glm::vec4(1.0, 1.0, 1.0,1.0);
+	m_material.ambientColor = glm::vec4(1.0, 1.0, 1.0,1.0);
+	m_material.shininess = 2.0;
+	m_material.specularIntensity = 0.0;
+
+	//Init spotlight UBO
+	GLuint blockIndex = glGetUniformBlockIndex(m_shader->GetProgram(), "SceneLight");
+	glGenBuffers(1, &m_spotUBO);
+	glBindBuffer(GL_UNIFORM_BUFFER, m_spotUBO);
+	glBufferData(GL_UNIFORM_BUFFER, sizeof(m_spotLight), &m_spotLight, GL_DYNAMIC_DRAW);
+	glBindBuffer(GL_UNIFORM_BUFFER, 0);
+
+	GLuint binding_point_index = 0;
+	glBindBufferBase(GL_UNIFORM_BUFFER, binding_point_index, m_spotUBO);
+	glUniformBlockBinding(m_shader->GetProgram(), blockIndex, binding_point_index);
+
+	//Init material UBO
+	GLuint matBlockIndex = glGetUniformBlockIndex(m_shader->GetProgram(), "Material");
+	glGenBuffers(1, &m_materialUBO);
+	glBindBuffer(GL_UNIFORM_BUFFER, m_materialUBO);
+	glBufferData(GL_UNIFORM_BUFFER, sizeof(m_material), &m_material, GL_DYNAMIC_DRAW);
+	glBindBuffer(GL_UNIFORM_BUFFER, 0);
+
+	GLuint materialBindingPoint = 1;
+	glBindBufferBase(GL_UNIFORM_BUFFER, materialBindingPoint, m_materialUBO);
+	glUniformBlockBinding(m_shader->GetProgram(), matBlockIndex, materialBindingPoint);
+	//m_worldMatrix = glm::scale(glm::mat4x4(1.0), glm::vec3(0.5, 0.5, 0.5));
+	m_worldMatrix = glm::scale(glm::mat4x4(1.0), glm::vec3(2.0, 2.0, 2.0));
 
 	InitEnvironmentMapTexture();
 	InitEnvironmentRendering();
@@ -307,13 +342,28 @@ void SphericalHarmonicsDemo::SphericalHarmonicsScale(float * result, int order,
 
 void SphericalHarmonicsDemo::BakeSphericalHarmonics()
 {
-	//m_shTech.Enable();
+	m_shader->Bind();
 	for (int bounceIndex = 1; bounceIndex <= MAX_BOUNCES; ++bounceIndex)
 	{
-		//renderEnvironmentMap(bounceIndex - 1);
+		RenderEnvironmentMap(bounceIndex - 1);
 		SphericalHarmonicsFromTexture(m_envMapTexture, m_shCoeff[bounceIndex], 3);
 	}
 }
+
+void SphericalHarmonicsDemo::RenderEnvironmentMap(unsigned int coeffIndex)
+{
+	glBindFramebuffer(GL_FRAMEBUFFER, m_fboId);
+
+	for (int faceIndex = 0; faceIndex < 6; ++faceIndex)
+	{
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + faceIndex, m_envMapTexture, 0);
+		glClear(GL_DEPTH_BUFFER_BIT);
+		m_cubeCam->SetCameraToFace(faceIndex);
+		RenderScene(m_cubeCam->GetPosition(), m_cubeCam->GetViewProjection(), coeffIndex);
+	}
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
 
 
 void SphericalHarmonicsDemo::Update(float dt)
@@ -321,15 +371,18 @@ void SphericalHarmonicsDemo::Update(float dt)
 
 }
 
+void SphericalHarmonicsDemo::RenderScene(const glm::vec3 &camPosition, const glm::mat4 &viewProjection, unsigned int coeffIndex)
+{
+	m_shader->Bind();
+	glUniformMatrix4fv(m_viewProjMatrixLocation, 1, GL_FALSE, &viewProjection[0][0]);
+	glUniformMatrix4fv(m_modelMatrixLocation, 1, GL_FALSE, &m_worldMatrix[0][0]);
+	glUniform3f(m_camPositionLocation, camPosition.x, camPosition.y, camPosition.z);
+	glUniform3fv(m_coeffLocation, 9, &m_shCoeff[coeffIndex][0][0]);
+
+	m_room->Draw();
+}
+
 void SphericalHarmonicsDemo::Render(Camera* camera)
 {
-
-	m_shader->Bind();
-
-	glUniformMatrix4fv(m_viewMatrixULocation, 1, GL_FALSE, &camera->GetView()[0][0]);
-	glUniformMatrix4fv(m_projMatrixULocation, 1, GL_FALSE, &camera->GetProjection()[0][0]);
-	//m_floor->Draw();
-	m_room->Draw();
-
-
+	RenderScene(camera->GetPosition(), camera->GetViewProjection(), 1);
 }

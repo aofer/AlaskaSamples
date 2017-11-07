@@ -137,5 +137,11 @@
     <None Include="Assets\Shaders\SimpleMesh_fs.glsl">
       <Filter>Resource Files\Shaders</Filter>
     </None>
+    <None Include="Assets\Shaders\SHLighting_fs.glsl">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="Assets\Shaders\SHLighting_vs.glsl">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>
