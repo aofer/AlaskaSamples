@@ -14,13 +14,16 @@
 #include "SphericalHarmonicsDemo.h"
 #include "common/ResourceManager.h"
 
-bool activeCamera;
-FPSCamera camera;
+bool camMouseMove;
+FPSCamera defaultCamera;
+FPSCamera* activeCamera;
 GLfloat deltaTime = 0.0f;
 GLfloat lastFrame = 0.0f;
 GLfloat lastX, lastY;
 GLfloat mouseSensitivity = 0.5;
 bool firstEntered = true;
+
+#define REPEAT_OR_PRESS(action) (action == GLFW_PRESS || action == GLFW_REPEAT)
 
 static void error_callback(int error, const char* description)
 {
@@ -31,29 +34,29 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 {
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, GLFW_TRUE);
-	if (key == GLFW_KEY_W && action == GLFW_PRESS)
+	if (key == GLFW_KEY_W && REPEAT_OR_PRESS(action))
 	{
-		camera.moveForward(0.3);
+		activeCamera->moveForward(0.3);
 	}
-	else if (key ==GLFW_KEY_S && action == GLFW_PRESS)
+	else if (key ==GLFW_KEY_S && REPEAT_OR_PRESS(action))
 	{
-		camera.moveForward(-0.3);
+		activeCamera->moveForward(-0.3);
 	}
-	else if (key == GLFW_KEY_A && action == GLFW_PRESS)
+	else if (key == GLFW_KEY_A && REPEAT_OR_PRESS(action))
 	{
-		camera.strafe(0.3);
+		activeCamera->strafe(0.3);
 	}
-	else if (key == GLFW_KEY_D && action == GLFW_PRESS)
+	else if (key == GLFW_KEY_D && REPEAT_OR_PRESS(action))
 	{
-		camera.strafe(-0.3);
+		activeCamera->strafe(-0.3);
 	}
-	else if (key == GLFW_KEY_Q && action == GLFW_PRESS)
+	else if (key == GLFW_KEY_Q && REPEAT_OR_PRESS(action))
 	{
-		camera.liftUp(0.3);
+		activeCamera->liftUp(0.3);
 	}
-	else if (key == GLFW_KEY_Z && action == GLFW_PRESS)
+	else if (key == GLFW_KEY_Z && REPEAT_OR_PRESS(action))
 	{
-		camera.liftUp(-0.3);
+		activeCamera->liftUp(-0.3);
 	}
 }
 
@@ -61,11 +64,11 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 {
 	if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS)
 	{
-		activeCamera = true;
+		camMouseMove = true;
 	}
 	else
 	{
-		activeCamera = false;
+		camMouseMove = false;
 	}
 }
 
@@ -84,11 +87,11 @@ void mouse_move_callback(GLFWwindow *window, double xPos, double yPos)
 	lastX = xPos;
 	lastY = yPos;
 
-	if (activeCamera)
+	if (camMouseMove)
 	{
 		//camera.MouseMovement(xOffset, yOffset);
-		camera.pitch(mouseSensitivity * yOffset);
-		camera.yaw(mouseSensitivity * -xOffset);
+		activeCamera->pitch(mouseSensitivity * yOffset);
+		activeCamera->yaw(mouseSensitivity * -xOffset);
 	}
 
 }
@@ -160,16 +163,19 @@ int main(int argc, char *argv[])
 
 
 	//FPSCamera* camera = new FPSCamera();
-	camera.SetPosition(glm::vec3(0.0, 5.0, -13.0));
-	camera.SetLookAt(glm::vec3(0.0, 5.0, 0.0));
+	defaultCamera.SetPosition(glm::vec3(0.0, 1.0, -1.0));
+	defaultCamera.SetLookAt(glm::vec3(0.0, 1.0, 1.0));
+	activeCamera = &defaultCamera;
 	ResourceManager* manager = new ResourceManager();
-	SimpleMeshDemo* demo = new SimpleMeshDemo();
+	SimpleMeshDemo* simpleMeshDemo = new SimpleMeshDemo();
 	SphericalHarmonicsDemo* shDemo = new SphericalHarmonicsDemo();
 	shDemo->InitializeScene(manager);
-	demo->InitializeScene(manager);
+	simpleMeshDemo->InitializeScene(manager);
 	glfwSwapInterval(1);
 
 	// NOTE: OpenGL error checks have been omitted for brevity
+
+	IDemo* currentDemo = simpleMeshDemo;
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -194,11 +200,17 @@ int main(int argc, char *argv[])
 #pragma region ImGui
 		ImGui::Begin("OpenGL Tech Demos", &ImGui_WindowOpened, ImVec2(0, 0), 0.5f, ImGuiWindowFlags_AlwaysUseWindowPadding | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoTitleBar);
 		ImGui::SetWindowPos(ImVec2(10, 10));
-		ImGui::SetWindowSize(ImVec2(255, screenHeight - 20));
+		ImGui::SetWindowSize(ImVec2(300, screenHeight - 20));
 		if (ImGui::CollapsingHeader("Demos", 0, true, true))
 		{
 			if (ImGui::TreeNode("Simple Mesh"))
 			{
+				bool clicked = ImGui::Button("Simple Mesh Demo");
+				if (clicked)
+				{
+					currentDemo = simpleMeshDemo;
+					activeCamera = &defaultCamera;
+				}
 				float colorA[4];
 				ImGui::ColorPicker4("colorA", colorA, 0);
 				glm::vec4 colorVec(colorA[0],colorA[1], colorA[2], colorA[3] );
@@ -208,8 +220,25 @@ int main(int argc, char *argv[])
 				float colorC[4];
 				ImGui::ColorPicker4("colorC", colorC, 0);
 				glm::vec4 colorVecC(colorC[0], colorC[1], colorC[2], colorC[3]);
-				demo->SetColors(colorVec, colorVecB, colorVecC);
-				bool clicked = ImGui::Button("Cube Mapping Demo");
+				simpleMeshDemo->SetColors(colorVec, colorVecB, colorVecC);
+				ImGui::TreePop();
+			}
+			if (ImGui::TreeNode("Spherical Harmonics"))
+			{
+				bool clicked = ImGui::Button("Spherical Harmonics Demo");
+				if (clicked)
+				{
+					currentDemo = shDemo;
+					activeCamera = shDemo->GetDemoCamera();
+				}
+				static int numBounces = 1;
+				if (ImGui::SliderInt("Bounces", &numBounces, 0, 3, nullptr))
+				{
+					shDemo->SetBounces(numBounces);
+				}
+				//ImGui::InputText("Cubemap center",)
+
+
 				ImGui::TreePop();
 			}
 		}
@@ -217,8 +246,8 @@ int main(int argc, char *argv[])
 
 #pragma endregion
 
-		shDemo->Update(deltaTime);
-		shDemo->Render(&camera);
+		currentDemo->Update(deltaTime);
+		currentDemo->Render(activeCamera);
 
 
 		//render gui
@@ -231,6 +260,11 @@ int main(int argc, char *argv[])
 		glfwSwapBuffers(window);
 
 	}
+
+	//Add cleanup code
+	ImGui_ImplGlfwGL3_Shutdown();
+	delete simpleMeshDemo;
+	delete shDemo;
 
 	glfwDestroyWindow(window);
 

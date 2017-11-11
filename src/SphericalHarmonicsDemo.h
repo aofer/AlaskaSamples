@@ -1,6 +1,7 @@
 #pragma once
 #include "IDemo.h"
 #include "Common/ResourceManager.h"
+#include "Common/Lighting.h"
 
 class CubeMapCamera;
 
@@ -11,19 +12,6 @@ struct Material
 	glm::vec4 ambientColor;
 	float shininess;
 	float specularIntensity;
-};
-
-struct SpotLight
-{
-	glm::vec4 Color;
-	glm::vec4 Position;
-	glm::vec4 Direction;
-	float AmbientIntensity;
-	float DiffuseIntensity;
-	float ConstAtten;
-	float LinearAtten;
-	float ExpAtten;
-	float Cutoff;
 };
 
 
@@ -77,5 +65,10 @@ public:
 	virtual void Update(float dt);
 	virtual void Render(Camera* camera);
 
+	SphericalHarmonicsDemo();
+
 	virtual ~SphericalHarmonicsDemo();
+
+	//Public setters for GUI
+	void SetBounces(const int bounces);
 };

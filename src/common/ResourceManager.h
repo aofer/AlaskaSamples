@@ -39,7 +39,7 @@ private:
 	std::map<std::string, TexturePtr> m_textures;
 	std::string m_resourceFolderPath;
 
-	MeshPtr ResourceManager::CreateMesh(const std::string& path);
+	MeshPtr ResourceManager::CreateMeshFromObj(const std::string& path);
 	void ResourceManager::InitMesh(unsigned int Index, const aiMesh* paiMesh, MeshPtr mesh);
 	MeshPtr ResourceManager::InitFromScene(const aiScene* pScene, const std::string& Filename);
 };

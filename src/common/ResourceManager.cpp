@@ -51,7 +51,7 @@ ShaderProgramPtr ResourceManager::GetShader(const std::string& name)
 
 MeshPtr ResourceManager::LoadMesh(const std::string& path, const std::string& name)
 {
-	MeshPtr tMesh = CreateMesh(m_resourceFolderPath + path);
+	MeshPtr tMesh = CreateMeshFromObj(m_resourceFolderPath + path);
 
 	m_meshes[name] = tMesh;
 	return tMesh;
@@ -91,7 +91,7 @@ void ResourceManager::SetResourceFolderPath(const std::string& path)
 	m_resourceFolderPath = path;
 }
 
-MeshPtr ResourceManager::CreateMesh(const std::string& path)
+MeshPtr ResourceManager::CreateMeshFromObj(const std::string& path)
 {
 	// Release the previously loaded mesh (if it exists)
 	//			Clear();

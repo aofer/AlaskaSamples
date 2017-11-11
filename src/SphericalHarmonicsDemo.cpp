@@ -1,6 +1,7 @@
 #pragma once
 #include "SphericalHarmonicsDemo.h"
 #include "Common/Camera.h"
+#include "common/FPSCamera.h"
 #include "Common/CubeMapCamera.h"
 
 #define _USE_MATH_DEFINES
@@ -26,7 +27,7 @@ void SphericalHarmonicsDemo::InitializeScene(ResourceManager* manager)
 	glm::vec3 cubeMapCenter = glm::vec3(0.0, 5.0, 0.0);
 	m_cubeCam = new CubeMapCamera(cubeMapCenter);
 	m_shCoeff[0].resize(9);
-	m_numOfBounces = 3;
+	m_numOfBounces = 1;
 
 	m_spotLight.Color = glm::vec4(1.0, 1.0, 1.0,1.0);
 	m_spotLight.DiffuseIntensity = 0.3f;
@@ -73,9 +74,22 @@ void SphericalHarmonicsDemo::InitializeScene(ResourceManager* manager)
 	BakeSphericalHarmonics();
 }
 
+SphericalHarmonicsDemo::SphericalHarmonicsDemo()
+{
+	m_camera = new FPSCamera();
+	m_camera->SetPosition(glm::vec3(0.0, 5.0, -13.0));
+	m_camera->SetLookAt(glm::vec3(0.0, 5.0, 0.0));
+}
+
 SphericalHarmonicsDemo::~SphericalHarmonicsDemo()
 {
 	delete m_cubeCam;
+	delete m_camera;
+}
+
+void SphericalHarmonicsDemo::SetBounces(const int bounces)
+{
+	m_numOfBounces = bounces;
 }
 
 void SphericalHarmonicsDemo::InitEnvironmentMapTexture()
@@ -384,5 +398,5 @@ void SphericalHarmonicsDemo::RenderScene(const glm::vec3 &camPosition, const glm
 
 void SphericalHarmonicsDemo::Render(Camera* camera)
 {
-	RenderScene(camera->GetPosition(), camera->GetViewProjection(), 1);
+	RenderScene(camera->GetPosition(), camera->GetViewProjection(), m_numOfBounces);
 }
