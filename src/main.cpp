@@ -13,6 +13,7 @@
 #include "SimpleMeshDemo.h"
 #include "SphericalHarmonicsDemo.h"
 #include "common/ResourceManager.h"
+#include "common/Logger.h"
 
 bool camMouseMove;
 FPSCamera defaultCamera;
@@ -132,6 +133,9 @@ int main(int argc, char *argv[])
 		glfwTerminate();
 		exit(EXIT_FAILURE);
 	}
+
+	//Init logger
+	Common::Logger::GetInstance().Init();
 
 	glfwSetKeyCallback(window, key_callback);
 	glfwSetCursorPosCallback(window, mouse_move_callback);

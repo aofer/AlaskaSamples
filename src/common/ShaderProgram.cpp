@@ -34,9 +34,7 @@ void ShaderProgram::Compile(const std::string& vertexSrc, const std::string& Fra
 		std::vector<char> program_log(info_log_length);
 		glGetProgramInfoLog(program, info_log_length, NULL, &program_log[0]);
 		std::cout << "Shader Loader : LINK ERROR" << std::endl << &program_log[0] << std::endl;
-		std::ostringstream stream;
-		stream << "Shader Loader : LINK ERROR" << &program_log[0] << std::endl;
-		//LOG_ERROR(stream.str());
+		LOG_ERROR("Shader Loader : LINK ERROR : {0}", &program_log[0]);
 		return;
 	}
 	m_program = program;
