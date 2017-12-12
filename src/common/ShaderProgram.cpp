@@ -6,11 +6,14 @@ ShaderProgram::ShaderProgram()
 
 }
 
-void ShaderProgram::Compile(const std::string& vertexSrc, const std::string& FragSrc, const std::string& GeometrySrc /*= NULL*/)
+void ShaderProgram::Compile(const std::string& vertexSrc, const std::string& FragSrc, 
+	const std::string& GeometrySrc, const std::string& tesSource , const std::string& tcsSource )
 {
 	GLuint vertex_shader = CreateShader(GL_VERTEX_SHADER, vertexSrc, "vertex shader");
 	GLuint fragment_shader = CreateShader(GL_FRAGMENT_SHADER, FragSrc, "fragment shader");
 	GLuint geometry_shader = -1;
+	GLuint tes_shader = -1;
+	GLuint tcs_shader = -1;
 
 	int  link_result = 0;
 	//create the program handle, attach the shaders and link it
@@ -21,6 +24,16 @@ void ShaderProgram::Compile(const std::string& vertexSrc, const std::string& Fra
 	{
 		geometry_shader = CreateShader(GL_GEOMETRY_SHADER, GeometrySrc, "geometry shader");
 		glAttachShader(program, geometry_shader);
+	}
+	if (!tesSource.empty())
+	{
+		tes_shader = CreateShader(GL_GEOMETRY_SHADER, tesSource, "tes shader");
+		glAttachShader(program, tes_shader);
+	}
+	if (!tcsSource.empty())
+	{
+		tcs_shader = CreateShader(GL_GEOMETRY_SHADER, tcsSource, "tcs shader");
+		glAttachShader(program, tcs_shader);
 	}
 
 	glLinkProgram(program);

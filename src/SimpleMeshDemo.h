@@ -7,7 +7,7 @@ private:
 	MeshPtr m_floor;
 	MeshPtr m_box;
 	ShaderProgramPtr m_shader;
-	TexturePtr m_texture;
+	Texture2DPtr m_texture;
 	GLuint m_viewMatrixULocation;
 	GLuint m_projMatrixULocation;
 

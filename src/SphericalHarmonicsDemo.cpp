@@ -1,4 +1,3 @@
-#pragma once
 #include "SphericalHarmonicsDemo.h"
 #include "Common/Camera.h"
 #include "common/FPSCamera.h"

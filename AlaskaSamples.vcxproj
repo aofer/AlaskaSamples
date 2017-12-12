@@ -139,14 +139,19 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\common\Box.cpp" />
     <ClCompile Include="src\common\Camera.cpp" />
     <ClCompile Include="src\common\CubeMapCamera.cpp" />
     <ClCompile Include="src\common\CubeMapTexture.cpp" />
     <ClCompile Include="src\common\FPSCamera.cpp" />
     <ClCompile Include="src\common\Mesh.cpp" />
+    <ClCompile Include="src\common\Model.cpp" />
     <ClCompile Include="src\common\ResourceManager.cpp" />
     <ClCompile Include="src\common\ShaderProgram.cpp" />
+    <ClCompile Include="src\common\Terrain.cpp" />
     <ClCompile Include="src\common\Texture.cpp" />
+    <ClCompile Include="src\common\Texture2D.cpp" />
+    <ClCompile Include="src\common\Texture2DArray.cpp" />
     <ClCompile Include="src\imgui\imgui.cpp" />
     <ClCompile Include="src\imgui\imgui_demo.cpp" />
     <ClCompile Include="src\imgui\imgui_draw.cpp" />
@@ -154,8 +159,10 @@
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\SimpleMeshDemo.cpp" />
     <ClCompile Include="src\SphericalHarmonicsDemo.cpp" />
+    <ClCompile Include="src\TerrainTesselationDemo.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\common\Box.h" />
     <ClInclude Include="src\common\Camera.h" />
     <ClInclude Include="src\common\Common.h" />
     <ClInclude Include="src\common\CubeMapCamera.h" />
@@ -164,9 +171,13 @@
     <ClInclude Include="src\common\Lighting.h" />
     <ClInclude Include="src\common\Logger.h" />
     <ClInclude Include="src\common\Mesh.h" />
+    <ClInclude Include="src\common\Model.h" />
     <ClInclude Include="src\common\ResourceManager.h" />
     <ClInclude Include="src\common\ShaderProgram.h" />
+    <ClInclude Include="src\common\Terrain.h" />
     <ClInclude Include="src\common\Texture.h" />
+    <ClInclude Include="src\common\Texture2D.h" />
+    <ClInclude Include="src\common\Texture2DArray.h" />
     <ClInclude Include="src\IDemo.h" />
     <ClInclude Include="src\imgui\imconfig.h" />
     <ClInclude Include="src\imgui\imgui.h" />
@@ -177,12 +188,18 @@
     <ClInclude Include="src\imgui\stb_truetype.h" />
     <ClInclude Include="src\SimpleMeshDemo.h" />
     <ClInclude Include="src\SphericalHarmonicsDemo.h" />
+    <ClInclude Include="src\TerrainTesselationDemo.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Shaders\SHLighting_fs.glsl" />
     <None Include="Assets\Shaders\SHLighting_vs.glsl" />
     <None Include="Assets\Shaders\SimpleMesh_fs.glsl" />
     <None Include="Assets\Shaders\SimpleMesh_vs.glsl" />
+    <None Include="Assets\Shaders\terrain_fs.glsl" />
+    <None Include="Assets\Shaders\terrain_gs.glsl" />
+    <None Include="Assets\Shaders\terrain_tcs.glsl" />
+    <None Include="Assets\Shaders\terrain_tes.glsl" />
+    <None Include="Assets\Shaders\terrain_vs.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

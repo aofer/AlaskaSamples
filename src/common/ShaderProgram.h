@@ -15,7 +15,8 @@ private:
 	GLuint CreateShader(GLenum shaderType, const std::string& source, const std::string& shaderName);
 public:
 	ShaderProgram();
-	void Compile(const std::string& vertexSrc, const std::string& fragmentSrc, const std::string& geometrySrc = NULL);
+	void Compile(const std::string& vertexSrc, const std::string& fragmentSrc, const std::string& geometrySrc = nullptr,
+		const std::string& tesSource = nullptr, const std::string& tcsSource = nullptr);
 	void Bind();
 	bool IsBinded();
 	GLuint GetProgram() const;

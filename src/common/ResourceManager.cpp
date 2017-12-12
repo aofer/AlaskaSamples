@@ -38,11 +38,28 @@ ShaderProgramPtr ResourceManager::LoadShader(const std::string& vShaderFile, con
 	{
 		geometryShaderStr = ReadFileIntoString(m_resourceFolderPath + gShaderFile);
 	}
-	program->Compile(vertexShaderStr, fragmentShaderStr, geometryShaderStr);
+	program->Compile(vertexShaderStr, fragmentShaderStr, geometryShaderStr,"", "");
 	m_shaders[name] = program;
 	return program;
 }
 
+ShaderProgramPtr ResourceManager::LoadShader(const std::string& vShaderFile, const std::string& fShaderFile, const std::string& gShaderFile, const std::string& tesShaderFile, const std::string& tcsShaderFile, std::string name)
+{
+	if (vShaderFile.empty() || fShaderFile.empty() || gShaderFile.empty() || tesShaderFile.empty() || tcsShaderFile.empty())
+	{
+		LOG_ERROR("Missing shader path");
+		return nullptr;
+	}
+	ShaderProgramPtr program = std::make_shared<ShaderProgram>();
+	std::string vertexShaderStr = ReadFileIntoString(m_resourceFolderPath + vShaderFile);
+	std::string fragmentShaderStr = ReadFileIntoString(m_resourceFolderPath + fShaderFile);
+	std::string geometryShaderStr = ReadFileIntoString(m_resourceFolderPath + gShaderFile);
+	std::string tesShaderStr = ReadFileIntoString(m_resourceFolderPath + tesShaderFile);
+	std::string tcsShaderStr = ReadFileIntoString(m_resourceFolderPath + tcsShaderFile);
+	program->Compile(vertexShaderStr, fragmentShaderStr, geometryShaderStr, tesShaderStr, tcsShaderStr);
+	m_shaders[name] = program;
+	return nullptr;
+}
 
 ShaderProgramPtr ResourceManager::GetShader(const std::string& name)
 {
@@ -62,15 +79,15 @@ MeshPtr ResourceManager::GetMesh(const std::string& name)
 	return m_meshes[name];
 }
 
-TexturePtr ResourceManager::LoadTexture(const std::string& path, const std::string& name)
+Texture2DPtr ResourceManager::LoadTexture2D(const std::string& path, const std::string& name, const ImageFormat &format)
 {
-	TexturePtr texture = std::make_shared<Texture>(m_resourceFolderPath + path);
-	texture->Load();
+	Texture2DPtr texture = std::make_shared<Texture2D>();
+	texture->InitFromFile(m_resourceFolderPath + path, format);
 	m_textures[name] = texture;
 	return texture;
 }
 
-TexturePtr ResourceManager::GetTexture(const std::string& name)
+Texture2DPtr ResourceManager::GetTexture2D(const std::string& name)
 {
 	return m_textures[name];
 }

@@ -64,6 +64,24 @@
     <ClCompile Include="src\SphericalHarmonicsDemo.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\common\Box.cpp">
+      <Filter>src\common</Filter>
+    </ClCompile>
+    <ClCompile Include="src\common\Model.cpp">
+      <Filter>src\common</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TerrainTesselationDemo.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\common\Texture2D.cpp">
+      <Filter>src\common</Filter>
+    </ClCompile>
+    <ClCompile Include="src\common\Texture2DArray.cpp">
+      <Filter>src\common</Filter>
+    </ClCompile>
+    <ClCompile Include="src\common\Terrain.cpp">
+      <Filter>src\common</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\common\Common.h">
@@ -129,6 +147,24 @@
     <ClInclude Include="src\common\Lighting.h">
       <Filter>src\common</Filter>
     </ClInclude>
+    <ClInclude Include="src\common\Box.h">
+      <Filter>src\common</Filter>
+    </ClInclude>
+    <ClInclude Include="src\common\Model.h">
+      <Filter>src\common</Filter>
+    </ClInclude>
+    <ClInclude Include="src\TerrainTesselationDemo.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\common\Texture2D.h">
+      <Filter>src\common</Filter>
+    </ClInclude>
+    <ClInclude Include="src\common\Texture2DArray.h">
+      <Filter>src\common</Filter>
+    </ClInclude>
+    <ClInclude Include="src\common\Terrain.h">
+      <Filter>src\common</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Shaders\SimpleMesh_vs.glsl">
@@ -141,6 +177,21 @@
       <Filter>Resource Files\Shaders</Filter>
     </None>
     <None Include="Assets\Shaders\SHLighting_vs.glsl">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="Assets\Shaders\terrain_gs.glsl">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="Assets\Shaders\terrain_tcs.glsl">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="Assets\Shaders\terrain_tes.glsl">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="Assets\Shaders\terrain_vs.glsl">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="Assets\Shaders\terrain_fs.glsl">
       <Filter>Resource Files\Shaders</Filter>
     </None>
   </ItemGroup>
