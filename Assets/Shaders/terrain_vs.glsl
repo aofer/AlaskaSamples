@@ -6,7 +6,7 @@ out VertexShaderOut {
 
 } vs_out;
 
-const vec3 PATCH_QUAD[]  = vec3[] {	vec3(-0.5, 0.0, 0.5),
+const vec3 PATCH_QUAD[]  = vec3[] (	vec3(-0.5, 0.0, 0.5),
 									vec3(0.5, 0.0, 0.5),
 									vec3(0.5, 0.0, -0.5),
 									vec3(-0.5, 0.0, -0.5));
@@ -30,6 +30,10 @@ void main()
 	//displacement and normals textures
 	vs_out.texCoord = (((PATCH_QUAD[gl_VertexID].xz + vec2(0.5)) * PATCH_SIZE) + offset) / terrainSize;
 	vs_out.texCoord.t = 1.0 - vs_out.texCoord.t;
+
+	//albedo textures
+	vs_out.texCoord2 = PATCH_QUAD[gl_VertexID].xz + vec2(0.5);
+	vs_out.texCoord2.t = 1.0 - vs_out.texCoord2.t;
 
 	vec3 instancePosition = (PATCH_QUAD[gl_VertexID] * vec3(PATCH_SIZE.x, 1, PATCH_SIZE.y)) + 
 							vec3(offset.x, 0, offset.y);

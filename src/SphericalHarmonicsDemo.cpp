@@ -16,13 +16,11 @@ void SphericalHarmonicsDemo::InitializeScene(ResourceManager* manager)
 {
 	m_room = manager->LoadMesh("Models\\room.obj", "room");
 	m_shader = manager->LoadShader("Shaders\\SHLighting_vs.glsl", "Shaders\\SHLighting_fs.glsl", "", "SHLighting");
-
 	m_shader->Bind();
 	m_viewProjMatrixLocation = glGetUniformLocation(m_shader->GetProgram(), "viewProjMatrix");
 	m_modelMatrixLocation = glGetUniformLocation(m_shader->GetProgram(), "worldMatrix");
 	m_camPositionLocation = glGetUniformLocation(m_shader->GetProgram(), "camPosition");
 	m_coeffLocation = glGetUniformLocation(m_shader->GetProgram(), "gCoef");
-
 	glm::vec3 cubeMapCenter = glm::vec3(0.0, 5.0, 0.0);
 	m_cubeCam = new CubeMapCamera(cubeMapCenter);
 	m_shCoeff[0].resize(9);
@@ -115,21 +113,20 @@ void SphericalHarmonicsDemo::InitEnvironmentMapTexture()
 
 void SphericalHarmonicsDemo::InitEnvironmentRendering()
 {
+
 	glGenFramebuffers(1, &m_fboId);
 	glBindFramebuffer(GL_FRAMEBUFFER, m_fboId);
-
 	GLuint depthBufferId;
 	glGenRenderbuffers(1, &depthBufferId);
+	glBindRenderbuffer(GL_RENDERBUFFER, depthBufferId);
 	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, CUBEMAP_SIZE, CUBEMAP_SIZE);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X, m_envMapTexture, 0);
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthBufferId);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X, m_envMapTexture, 0);
-
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
 		std::cout << "Framebuffer not complete!" << std::endl;
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
 }
 
 void SphericalHarmonicsDemo::SphericalHarmonicsFromTexture(GLuint cubeTexture,

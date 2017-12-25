@@ -102,22 +102,72 @@ const ImageFormat ImageFormat::IMAGE_FORMAT_DEPTH_32F = ImageFormat(GL_DEPTH_COM
 
 
 
-	//TODO remove redundant copy when returning
-	const ImageData Texture::LoadFile(const std::string &path, const ImageFormat &format)
-	{
+	////TODO remove redundant copy when returning, fix case where file not found
+	//const ImageData Texture::LoadFile(const std::string &path, const ImageFormat &format)
+	//{
+	//	ImageData imageData;
+	//	int width, height,channels;
+	//	//unsigned char* image =
+	//	//	SOIL_load_image(path.c_str(), &width, &height, 0, SOIL_LOAD_RGB);
+	//	unsigned char* image = nullptr;
+	//	if (format.numberOfChannels == 1)
+	//	{
+	//		image =
+	//			SOIL_load_image(path.c_str(), &width, &height, &channels, SOIL_LOAD_L);
+	//	}
+	//	else
+	//	{
+	//		image =
+	//			SOIL_load_image(path.c_str(), &width, &height, &channels, SOIL_LOAD_AUTO);
+	//	}
+	//	if (image)
+	//	{
+	//		imageData.format = format;
+	//		imageData.width = width;
+	//		imageData.height = height;
+	//		imageData.sizeInBytes = imageData.width * imageData.height * imageData.format.numberOfChannels * imageData.format.bytesPerChannel;
+	//		imageData.data = new uint8_t[imageData.sizeInBytes];
+	//		memcpy(imageData.data, image, imageData.sizeInBytes);
+	//		free(image);
+	//	}
+	//	else
+	//	{
+	//		LOG_ERROR("Texture file not found : {0}", path);
+	//	}
+
+
+	//	return imageData;
+	//}
+
+	const ImageData Texture::LoadFile(const std::string &path, const ImageFormat &format) {
+		ilInit();
+
+		ILuint image;
+		ilGenImages(1, &image);
+		ilBindImage(image);
+		ilEnable(IL_ORIGIN_SET);
+		ilOriginFunc(IL_ORIGIN_LOWER_LEFT);
+
 		ImageData imageData;
-		int width, height;
-		//unsigned char* image =
-		//	SOIL_load_image(path.c_str(), &width, &height, 0, SOIL_LOAD_RGB);
-		unsigned char* image =
-			SOIL_load_image(path.c_str(), &width, &height,0, SOIL_LOAD_AUTO);
-		imageData.format = format;
-		imageData.width = width;
-		imageData.height = height;
-		imageData.sizeInBytes = imageData.width * imageData.height * imageData.format.numberOfChannels * imageData.format.bytesPerChannel;
-		imageData.data = new uint8_t[imageData.sizeInBytes];
-		memcpy(imageData.data, image, imageData.sizeInBytes);
-		free(image);
+
+		ILboolean result = ilLoadImage(path.c_str());
+		if (result) {
+			//ilConvertImage(IL_RGBA, IL_UNSIGNED_BYTE);
+
+			imageData.format = format;
+
+			imageData.width = ilGetInteger(IL_IMAGE_WIDTH);
+			imageData.height = ilGetInteger(IL_IMAGE_HEIGHT);
+			imageData.sizeInBytes = imageData.width * imageData.height * imageData.format.numberOfChannels * imageData.format.bytesPerChannel;
+
+			imageData.data = new uint8_t[imageData.sizeInBytes];
+			memcpy(imageData.data, ilGetData(), imageData.sizeInBytes);
+		}
+		else {
+			std::cout << "Failed to load image from file: " << path << std::endl;
+		}
+
+		ilDeleteImages(1, &image);
 
 		return imageData;
 	}

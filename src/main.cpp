@@ -12,6 +12,7 @@
 #include "common/FPSCamera.h"
 #include "SimpleMeshDemo.h"
 #include "SphericalHarmonicsDemo.h"
+#include "TerrainTesselationDemo.h"
 #include "common/ResourceManager.h"
 #include "common/Logger.h"
 
@@ -173,13 +174,14 @@ int main(int argc, char *argv[])
 	ResourceManager* manager = new ResourceManager();
 	SimpleMeshDemo* simpleMeshDemo = new SimpleMeshDemo();
 	SphericalHarmonicsDemo* shDemo = new SphericalHarmonicsDemo();
+	TerrainTesselationDemo* terrainDemo = new TerrainTesselationDemo();
 	shDemo->InitializeScene(manager);
 	simpleMeshDemo->InitializeScene(manager);
+	terrainDemo->InitializeScene(manager);
 	glfwSwapInterval(1);
 
-	// NOTE: OpenGL error checks have been omitted for brevity
 
-	IDemo* currentDemo = simpleMeshDemo;
+	IDemo* currentDemo = terrainDemo;
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -190,14 +192,12 @@ int main(int argc, char *argv[])
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
 
-
 		glfwGetFramebufferSize(window, &width, &height);
 		ratio = width / (float)height;
 		glViewport(0, 0, width, height);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glClearColor(0.0, 0.0, 0.0, 1.0);
 		glEnable(GL_DEPTH_TEST);
-
 		glfwPollEvents();
 		ImGui_ImplGlfwGL3_NewFrame();
 
@@ -245,6 +245,33 @@ int main(int argc, char *argv[])
 
 				ImGui::TreePop();
 			}
+			if (ImGui::TreeNode("Terrain Tesselation"))
+			{
+				bool clicked = ImGui::Button("Spherical Harmonics Demo");
+				if (clicked)
+				{
+					currentDemo = terrainDemo;
+					//activeCamera = terrainDemo->GetDemoCamera();
+				}
+				static int terrainSize = 10;
+				static float displacementScale = 1.0;
+				static int gridSize = 64;
+				if (ImGui::SliderInt("Terrain Size", &terrainSize, 10, 1000, nullptr))
+				{
+					terrainDemo->SetTerrainSize(terrainSize);
+				}
+				if (ImGui::SliderFloat("Disp Scale", &displacementScale, 1.0, 200.0, nullptr))
+				{
+					terrainDemo->SetDisplacementScale(displacementScale);
+				}
+				if (ImGui::SliderInt("Grid Size", &gridSize, 64, 512, nullptr))
+				{
+					//terrainDemo->SetGridSize(gridSize);
+				}
+				ImGui::TreePop();
+			}
+
+
 		}
 		ImGui::End();
 

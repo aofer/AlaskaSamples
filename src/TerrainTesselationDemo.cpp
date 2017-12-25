@@ -18,3 +18,18 @@ void TerrainTesselationDemo::Render(Camera* camera)
 {
 	m_terrain->Render(camera);
 }
+
+void TerrainTesselationDemo::SetTerrainSize(const int& size)
+{
+	m_terrain->SetTerrainSize(size);
+}
+
+void TerrainTesselationDemo::SetDisplacementScale(const float& scale)
+{
+	m_terrain->SetDisplacementScale(scale);
+}
+
+void TerrainTesselationDemo::SetGridSize(const int& size)
+{
+	m_terrain->SetGridSize(size);
+}

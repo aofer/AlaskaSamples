@@ -27,12 +27,12 @@ void ShaderProgram::Compile(const std::string& vertexSrc, const std::string& Fra
 	}
 	if (!tesSource.empty())
 	{
-		tes_shader = CreateShader(GL_GEOMETRY_SHADER, tesSource, "tes shader");
+		tes_shader = CreateShader(GL_TESS_EVALUATION_SHADER, tesSource, "tes shader");
 		glAttachShader(program, tes_shader);
 	}
 	if (!tcsSource.empty())
 	{
-		tcs_shader = CreateShader(GL_GEOMETRY_SHADER, tcsSource, "tcs shader");
+		tcs_shader = CreateShader(GL_TESS_CONTROL_SHADER, tcsSource, "tcs shader");
 		glAttachShader(program, tcs_shader);
 	}
 

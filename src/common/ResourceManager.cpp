@@ -45,7 +45,7 @@ ShaderProgramPtr ResourceManager::LoadShader(const std::string& vShaderFile, con
 
 ShaderProgramPtr ResourceManager::LoadShader(const std::string& vShaderFile, const std::string& fShaderFile, const std::string& gShaderFile, const std::string& tesShaderFile, const std::string& tcsShaderFile, std::string name)
 {
-	if (vShaderFile.empty() || fShaderFile.empty() || gShaderFile.empty() || tesShaderFile.empty() || tcsShaderFile.empty())
+	if (vShaderFile.empty() || fShaderFile.empty() || /*gShaderFile.empty() ||*/ tesShaderFile.empty() || tcsShaderFile.empty())
 	{
 		LOG_ERROR("Missing shader path");
 		return nullptr;
@@ -58,7 +58,7 @@ ShaderProgramPtr ResourceManager::LoadShader(const std::string& vShaderFile, con
 	std::string tcsShaderStr = ReadFileIntoString(m_resourceFolderPath + tcsShaderFile);
 	program->Compile(vertexShaderStr, fragmentShaderStr, geometryShaderStr, tesShaderStr, tcsShaderStr);
 	m_shaders[name] = program;
-	return nullptr;
+	return program;
 }
 
 ShaderProgramPtr ResourceManager::GetShader(const std::string& name)

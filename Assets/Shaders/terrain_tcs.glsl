@@ -39,10 +39,11 @@ void main()
 	vec4 p2 = gl_in[2].gl_Position;
 	vec4 p3 = gl_in[3].gl_Position;
     // Calculate the distance from the camera to the three control points
-    float EyeToVertexDistance0 = distance(cameraPosition, p0);
-    float EyeToVertexDistance1 = distance(cameraPosition, p1);
-    float EyeToVertexDistance2 = distance(cameraPosition, p2);
-	float EyeToVertexDistance3 = distance(cameraPosition, p3);
+	vec4 camPos = vec4(cameraPosition,1.0);
+    float EyeToVertexDistance0 = distance(camPos, p0);
+    float EyeToVertexDistance1 = distance(camPos, p1);
+    float EyeToVertexDistance2 = distance(camPos, p2);
+	float EyeToVertexDistance3 = distance(camPos, p3);
 
     // Calculate the tessellation levels
     gl_TessLevelOuter[0] = GetTessLevel(EyeToVertexDistance3, EyeToVertexDistance0);

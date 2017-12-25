@@ -4,11 +4,9 @@
 
 void SimpleMeshDemo::InitializeScene(ResourceManager* manager)
 {
-	int error = glGetError();
 	m_floor = manager->LoadMesh("Models\\ground.obj", "ground");
 	m_box = manager->LoadMesh("Models\\box.obj", "box");
 	m_shader = manager->LoadShader("Shaders\\simpleMesh_vs.glsl", "Shaders\\simpleMesh_fs.glsl", "", "simpleMesh");
-	error = glGetError();
 	m_texture = manager->LoadTexture2D("Textures\\checkers.png", "checkers");
 	m_shader->Bind();
 	m_viewMatrixULocation = glGetUniformLocation(m_shader->GetProgram(), "viewMatrix");
