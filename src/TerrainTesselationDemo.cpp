@@ -33,3 +33,13 @@ void TerrainTesselationDemo::SetGridSize(const int& size)
 {
 	m_terrain->SetGridSize(size);
 }
+
+void TerrainTesselationDemo::SetWindowSize(const glm::ivec2& size)
+{
+	m_terrain->SetWindowSize(size);
+}
+
+void TerrainTesselationDemo::SetWireframe(const bool &enableWireframe)
+{
+	m_terrain->SetWireframe(enableWireframe);
+}

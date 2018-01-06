@@ -127,8 +127,8 @@ int main(int argc, char *argv[])
 	int screenHeight = vidMode->height;
 	bool fullscreen = false;
 
-
-	window = glfwCreateWindow(1024, 768, "OpenGL Tech Demos", NULL, NULL);
+	glm::ivec2 windowSize = glm::ivec2(1024, 768);
+	window = glfwCreateWindow(windowSize.x, windowSize.y, "OpenGL Tech Demos", NULL, NULL);
 	if (!window)
 	{
 		glfwTerminate();
@@ -178,6 +178,7 @@ int main(int argc, char *argv[])
 	shDemo->InitializeScene(manager);
 	simpleMeshDemo->InitializeScene(manager);
 	terrainDemo->InitializeScene(manager);
+	terrainDemo->SetWindowSize(windowSize);
 	glfwSwapInterval(1);
 
 
@@ -245,9 +246,9 @@ int main(int argc, char *argv[])
 
 				ImGui::TreePop();
 			}
-			if (ImGui::TreeNode("Terrain Tesselation"))
+			if (ImGui::TreeNode("Terrain Tessellation"))
 			{
-				bool clicked = ImGui::Button("Spherical Harmonics Demo");
+				bool clicked = ImGui::Button("Terrain Tessellation Demo");
 				if (clicked)
 				{
 					currentDemo = terrainDemo;
@@ -256,6 +257,7 @@ int main(int argc, char *argv[])
 				static int terrainSize = 10;
 				static float displacementScale = 1.0;
 				static int gridSize = 64;
+				static bool enableWireframe = false;
 				if (ImGui::SliderInt("Terrain Size", &terrainSize, 10, 1000, nullptr))
 				{
 					terrainDemo->SetTerrainSize(terrainSize);
@@ -267,6 +269,10 @@ int main(int argc, char *argv[])
 				if (ImGui::SliderInt("Grid Size", &gridSize, 64, 512, nullptr))
 				{
 					//terrainDemo->SetGridSize(gridSize);
+				}
+				if (ImGui::Checkbox("Enable Wireframe", &enableWireframe))
+				{
+					terrainDemo->SetWireframe(enableWireframe);
 				}
 				ImGui::TreePop();
 			}

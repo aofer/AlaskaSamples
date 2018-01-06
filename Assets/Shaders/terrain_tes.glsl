@@ -31,5 +31,5 @@ void main() {
 	vec4 p2 = mix(gl_in[3].gl_Position, gl_in[2].gl_Position, gl_TessCoord.x);
 	gl_Position = mix(p1, p2, gl_TessCoord.y);
 	gl_Position.y += texture(displacementTexture, tes_out.texCoord).r * displacementScale;
-	gl_Position = projMatrix * viewMatrix * gl_Position;
+	//gl_Position = projMatrix * viewMatrix * gl_Position;
 }

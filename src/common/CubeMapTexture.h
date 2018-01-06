@@ -3,6 +3,7 @@
 #include <string>
 #include <GL/glew.h>
 
+//TODO deprecate and remove
 
 class CubeMapTexture
 {

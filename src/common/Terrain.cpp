@@ -1,5 +1,16 @@
 #include "Terrain.h"
 #include "Camera.h"
+
+Terrain::Terrain()
+{
+	m_windowSize = glm::ivec2(1024, 768);
+}
+
+Terrain::~Terrain()
+{
+
+}
+
 void Terrain::Initialize(ResourceManager* manager)
 {
 	m_shader = manager->LoadShader("Shaders\\terrain_vs.glsl", "Shaders\\terrain_fs.glsl", "Shaders\\terrain_gs.glsl", "Shaders\\terrain_tes.glsl", "Shaders\\terrain_tcs.glsl", "terrain");
@@ -10,6 +21,7 @@ void Terrain::Initialize(ResourceManager* manager)
 	m_size = glm::vec2(10.0f, 10.0f);  //1km
 	m_patchCount = m_gridsize.x * m_gridsize.y;
 	m_displacementScale = 1.0f;
+	m_tessellatedTriWidth = 20.0f;
 
 	m_shader->Bind();
 	//set uniform locations
@@ -18,11 +30,13 @@ void Terrain::Initialize(ResourceManager* manager)
 	m_gridSizeLocation = glGetUniformLocation(m_shader->GetProgram(), "gridSize");
 	m_sizeLocation = glGetUniformLocation(m_shader->GetProgram(), "terrainSize");
 	m_displacementScaleLocation = glGetUniformLocation(m_shader->GetProgram(), "displacementScale");
-	//m_tessellatedTriWidthLocation = glGetUniformLocation(m_shader->GetProgram(), "tessellatedTriWidth");
+	m_viewportSizeLocation = glGetUniformLocation(m_shader->GetProgram(), "viewportSize");
+	m_tessellatedTriWidthLocation = glGetUniformLocation(m_shader->GetProgram(), "tessellatedTriWidth");
 	m_patchCountLocation = glGetUniformLocation(m_shader->GetProgram(), "patchCount");
 	m_cameraPositionLocation = glGetUniformLocation(m_shader->GetProgram(), "cameraPosition");
 	m_heightMapLocation = glGetUniformLocation(m_shader->GetProgram(), "displacementTexture");
 	m_colorMapLocation = glGetUniformLocation(m_shader->GetProgram(), "colorTexture");
+	m_enableWireframeLocation = glGetUniformLocation(m_shader->GetProgram(), "enableWireframe");
 
 	glUniform1i(m_heightMapLocation, 0);
 	glUniform1i(m_colorMapLocation, 1);
@@ -46,7 +60,9 @@ void Terrain::Render(Camera* camera)
 	glUniform2i(m_gridSizeLocation, m_gridsize.x, m_gridsize.y);
 	glUniform1f(m_displacementScaleLocation, m_displacementScale);
 	glUniform2f(m_sizeLocation, m_size.x, m_size.y);
-	//glUniform1f(m_tessellatedTriWidthLocation, m_tessellatedTriWidth);
+	glUniform2i(m_viewportSizeLocation, m_windowSize.x, m_windowSize.y);
+	glUniform1i(m_enableWireframeLocation, m_drawWireframe);
+	glUniform1f(m_tessellatedTriWidthLocation, m_tessellatedTriWidth);
 	//glUniform3fv(m_cameraPositionLocation, 1, &camera->GetPosition()[0]);
 	glUniform3f(m_cameraPositionLocation, camera->GetPosition().x, camera->GetPosition().y, camera->GetPosition().z);
 
@@ -70,4 +86,14 @@ void Terrain::SetGridSize(const int& size)
 {
 	m_gridsize = glm::ivec2(size,size);
 	m_patchCount = m_gridsize.x * m_gridsize.y;
+}
+
+void Terrain::SetWireframe(const bool & enableWireframe)
+{
+	m_drawWireframe = enableWireframe;
+}
+
+void Terrain::SetWindowSize(const glm::ivec2& size)
+{
+	m_windowSize = size;
 }

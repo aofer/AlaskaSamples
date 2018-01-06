@@ -9,6 +9,7 @@ class TerrainTesselationDemo : public IDemo
 private:
 
 	Terrain* m_terrain;
+	//glm::ivec2 m_windowSize;
 
 
 public:
@@ -19,4 +20,7 @@ public:
 	void SetTerrainSize(const int& size);
 	void SetDisplacementScale(const float& scale);
 	void SetGridSize(const int& size);
+	//set the window size for wireframe drawing
+	void SetWindowSize(const glm::ivec2& size);
+	void SetWireframe(const bool &enableWireframe);
 };

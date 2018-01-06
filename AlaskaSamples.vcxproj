@@ -156,6 +156,7 @@ xcopy /y /s "$(SolutionDir)thirdParty\dlls\DevIL.dll" "$(OutDir)"
     <ClCompile Include="src\common\Texture.cpp" />
     <ClCompile Include="src\common\Texture2D.cpp" />
     <ClCompile Include="src\common\Texture2DArray.cpp" />
+    <ClCompile Include="src\common\TextureCube.cpp" />
     <ClCompile Include="src\imgui\imgui.cpp" />
     <ClCompile Include="src\imgui\imgui_demo.cpp" />
     <ClCompile Include="src\imgui\imgui_draw.cpp" />
@@ -182,6 +183,7 @@ xcopy /y /s "$(SolutionDir)thirdParty\dlls\DevIL.dll" "$(OutDir)"
     <ClInclude Include="src\common\Texture.h" />
     <ClInclude Include="src\common\Texture2D.h" />
     <ClInclude Include="src\common\Texture2DArray.h" />
+    <ClInclude Include="src\common\TextureCube.h" />
     <ClInclude Include="src\IDemo.h" />
     <ClInclude Include="src\imgui\imconfig.h" />
     <ClInclude Include="src\imgui\imgui.h" />

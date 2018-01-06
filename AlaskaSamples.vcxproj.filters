@@ -82,6 +82,9 @@
     <ClCompile Include="src\common\Terrain.cpp">
       <Filter>src\common</Filter>
     </ClCompile>
+    <ClCompile Include="src\common\TextureCube.cpp">
+      <Filter>src\common</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\common\Common.h">
@@ -163,6 +166,9 @@
       <Filter>src\common</Filter>
     </ClInclude>
     <ClInclude Include="src\common\Terrain.h">
+      <Filter>src\common</Filter>
+    </ClInclude>
+    <ClInclude Include="src\common\TextureCube.h">
       <Filter>src\common</Filter>
     </ClInclude>
   </ItemGroup>
